@@ -1,0 +1,310 @@
+:root{
+
+  /*  h1 - Colors: */  
+  --h1-color:hsla(0, 100%, 86%, 1);
+  --h1-border-color:hsla(271, 76%, 53%, 1);
+  --h1-hover-color:hsla(36, 100%, 85%, 1);
+
+  /*  a - Colors: */  
+  --a-color:whitesmoke;
+  --a-hover-color:hsl(276, 76%, 27%);
+
+  /*  p - Colors: */  
+  --p-color:whitesmoke;
+  --p-first-letter-color:hsla(271, 76%, 53%, 1);
+
+  /*  list - Colors: */  
+  --list-color:whitesmoke;
+
+ /*  navbar - Colors: */  
+  --navbar-border-color:hsla(271, 76%, 53%, 1);
+  --navbar-background-color:hsla(213, 33%, 90%, 0.5);
+
+  /*  table - Colors: */  
+  --th-td-color:hsla(209, 100%, 70%, 1); 
+  --th-td-border-color:hsla(271, 76%, 53%, 1);
+
+  /*  ect - Colors: */  
+  --background-color:fuchsia;
+  --footer-background-color:hsla(0, 0%, 100%, 0.05);
+  --address-color:whitesmoke;
+  --content-border-color:hsla(209, 100%, 70%, 1);
+
+  /* Content Postitons: */
+  --content-width:40vw;
+  --content-height:40vh;
+  
+  
+}
+
+/* Backup Backgrond */
+body{
+  background-image: url(../img/beach.jpg);
+  background-color: var(--background-color);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Main Backgrond */
+#bg-video{
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+}
+
+
+/* Main Content Positions/Hiding/Borders
+-------------------------------------------------------------------------------------
+*/
+.introduction p, .assignment ol, .address address, .portfolio ul, .schedule table{
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  width: var(--content-width);
+  height: var(--content-height);
+  visibility: hidden;
+  border-right: 3px solid var(--content-border-color);
+  border-bottom: 3px solid var(--content-border-color);
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;   
+}
+
+/* Postitions
+-------------------------------------------------------------------------------------
+ */
+.introduction h1{
+  position: absolute;
+  visibility: visible;
+  left:5%;
+  top: 15%;
+}
+
+.assignment h1{
+  position: absolute;
+  visibility: visible;
+  left:5%;
+  bottom:30%;
+}
+
+.schedule h1{
+  position: absolute;
+  visibility: visible;
+  right:5%;
+  top: 15%;
+}
+
+.portfolio h1{
+  position: absolute;
+  visibility: visible;
+  right: 5%;
+  bottom: 30%;
+}
+
+.address h1{
+  position: absolute;
+  visibility: visible;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.navbar ul {
+  display: flex;             
+  justify-content: center;   
+  list-style: none;        
+  margin: 0;
+  padding: 0;
+}
+
+.navbar ul li {
+  margin: 0 50px;      
+}
+
+
+.footer{
+  position: fixed;
+  bottom:0vh;
+  background-color: var(--footer-background-color);
+}
+
+/* Hover attributes
+-------------------------------------------------------------------------------------
+*/
+h1:hover{
+  color: var(--h1-hover-color);
+}
+
+a:hover {
+  color: var(--a-hover-color);             
+  text-decoration: underline;  
+}
+
+.introduction h1:hover + p {
+  visibility: visible;
+}
+
+.assignment h1:hover + ol {
+  visibility: visible;
+}
+
+.schedule h1:hover + table {
+  visibility: visible;
+}
+
+.portfolio h1:hover + ul {
+  visibility: visible;
+}
+
+.address h1:hover + address {
+  visibility: visible;
+}
+
+/* Editing
+-------------------------------------------------------------------------------------
+*/
+p {
+  font-family: "Swanky and Moo Moo", "Comic Sans MS", "Brush Script MT", cursive;
+  font-weight: 400;
+  font-style: normal;
+  line-height: 1.6;
+  text-align: center;
+  color: var(--p-color);
+}
+
+p::first-letter{
+  color: var(--p-first-letter-color);
+}
+
+.portfolio li:first-of-type {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+  padding: 10px;
+  border-radius: 8px;
+  background: hsla(213, 33%, 90%, 0.2);;
+}
+
+
+ul, ol {
+  color: var(--list-color);   
+  font-weight: bold;
+}
+
+h1 {
+  font-family: "Splash", "Comic Sans MS", "Brush Script MT", cursive;
+  font-weight: 400;
+  font-style: normal;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  border-bottom: 5px solid var(--h1-border-color);
+  border-radius: 25px; 
+  padding: 10px 18px;
+  color: var(--h1-color);
+  background-color: var(--navbar-background-color);
+}
+
+a {
+  text-decoration: none;    
+  color: var(--a-color);         
+  font-weight: bold;        
+}
+
+address{
+  color: var(--address-color);
+}
+
+.navbar ul li {
+  border: 2px solid var(--navbar-border-color);
+  border-radius: 8px;      
+  padding: 5px 10px;       
+  margin: 0 10px; 
+  background-color:var(--navbar-background-color);
+}
+
+/* Transitions 
+-------------------------------------------------------------------------------------
+*/
+h1 {
+  transition: all 0.4s ease-in-out;
+}
+h1:hover {
+  transform: scale(1.15) rotate(-2deg);
+  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.25);
+  letter-spacing: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--h1-border-color),
+    var(--h1-hover-color)
+  );
+}
+
+/* Fade in effect for main content */
+.introduction p, .assignment ol, .address address, .portfolio ul, .schedule table {
+  transition: visibility 0.3s, opacity 0.5s ease-in-out;
+  opacity: 0;
+}
+
+.introduction h1:hover + p, .assignment h1:hover + ol, .address h1:hover + address, .portfolio h1:hover + ul, .schedule h1:hover + table {
+  opacity: 1;
+}
+
+/* Hover glow on navigation buttons effect */
+.navbar ul li:hover {
+  background: linear-gradient(
+    90deg,
+    var(--h1-border-color),
+    var(--h1-hover-color)
+  );
+  box-shadow: 0 0 10px var(--h1-border-color);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Footer soft blurring/glowing effect */
+.footer {
+  box-shadow: 0 -2px 10px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+}
+
+/* Table Attributes
+-------------------------------------------------------------------------------------
+*/
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid var(--th-td-border-color);
+  padding: 5px;
+  text-align: center;
+  vertical-align: middle;
+  empty-cells: hide;
+  width: 16%;
+  height: 60px;
+  color: var(--th-td-color);
+}
+
+table tr:nth-child(even) {
+  background-color: hsla(209, 100%, 85%, 0.3); 
+}
+
+.class-green {
+  background-color: lightgreen;
+}
+
+.class-blue {
+  background-color:lightblue;
+}
+
+.class-yellow {
+  background-color:lightyellow;
+}
+
+.class-gray {
+  background-color:lightgray;
+}
