@@ -169,6 +169,15 @@ a:hover {
 /* Editing
 -------------------------------------------------------------------------------------
 */
+@font-face {
+  font-family: "Danmachi";
+  src: url("../fonts/Danmachi.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+
 p {
   font-family: "Swanky and Moo Moo", "Comic Sans MS", "Brush Script MT", cursive;
   padding: 5px;
@@ -197,7 +206,7 @@ ul, ol {
 }
 
 h1 {
-  font-family: "Splash", "Comic Sans MS", "Brush Script MT", cursive;
+  font-family: "Danmachi", "Comic Sans MS", "Brush Script MT",  serif;
   font-weight: 400;
   font-style: normal;
   text-transform: uppercase;
