@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Georgia Power Bill Calculator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-white py-4">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- Left side -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title mb-3">Georgia Power Bill Calculator</h3>
+                        <p class="small text-muted">
+                            The utility bill calculator is a resource that the Commission is making available
+                            that allows a consumer to check the accuracy of his/her monthly electric bill.
+                            A bill calculator has been prepared for customers of the Georgia Power Company.
+                            This bill calculator applies only to residential customers who are receiving service
+                            under the standard Residential Tariff (R-27). For more details regarding Georgia Power's
+                            residential tariff offerings, please visit Georgia Power Pricing & Rates.
+                        </p>
+                        <p class="small text-muted">Effective August 2023</p>
+                        <form id="bill-form" novalidate>
+                            <div class="mb-3">
+                                <label for="usage" class="form-label">Monthly Usage (kWh):</label>
+                                <input type="number" class="form-control" id="usage" placeholder="0" min="0" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="days" class="form-label">Billing Period (days):</label>
+                                <input type="number" class="form-control" id="days" placeholder="0" min="0" required>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="insideCity">
+                                <label class="form-check-label" for="insideCity">Inside City Limits?</label>
+                            </div>
+
+                            <div class="form-check mb-3">
+                                <input class="form-check-input" type="checkbox" id="isSummer">
+                                <label class="form-check-label" for="isSummer">Summer Month (June - September)</label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tax" class="form-label">Sales Tax (%)</label>
+                                <input type="number" class="form-control" id="tax" placeholder="0" min="0">
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">Calculate</button>
+                            <button type="reset" class="btn btn-secondary ms-2">Reset</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side -->
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title mb-3">Bill Details</h4>
+                        <table class="table table-bordered table-sm">
+                            <tbody>
+                                <tr>
+                                    <td class="table-light fw-semibold">Items</td>
+                                    <td class="table-light fw-semibold">Fees</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Base Charge:</td>
+                                    <td id="baseCharge">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tier 1 Component (kWh):</td>
+                                    <td id="tier1">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tier 2 Component (kWh):</td>
+                                    <td id="tier2">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Tier 3 Component (kWh):</td>
+                                    <td id="tier3">0.00</td>
+                                </tr>
+
+                                <tr class="table-light fw-semibold">
+                                    <th>Base Revenue -- Base Bill Subtotal:</th>
+                                    <th id="baseRevenue">0.00</th>
+                                </tr>
+
+                                <tr>
+                                    <td>Fuel Cost Rider:</td>
+                                    <td id="fuelCost">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Demand Side Management Residential Rider:</td>
+                                    <td id="dsm">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Nuclear Construction Cost Recovery Rider:</td>
+                                    <td id="nuclear">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Environmental Compliance Cost Recovery Rider:</td>
+                                    <td id="env">0.00</td>
+                                </tr>
+
+                                <tr class="table-light fw-semibold">
+                                    <th>Total Revenue -- Current Service Subtotal:</th>
+                                    <th id="totalRevenue">0.00</th>
+                                </tr>
+
+                                <tr>
+                                    <td>Franchise Fee:</td>
+                                    <td id="franchise">0.00</td>
+                                </tr>
+
+                                <tr>
+                                    <td>Total (excluding tax):</td>
+                                    <td id="totalExTax">0.00</td>
+                                </tr>
+
+                                <tr class="table-light fw-bold">
+                                    <th>Total (w/ tax):</th>
+                                    <th id="totalWithTax">0.00</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        // --- Constants ---
+
+        // Base rate per day
+        const BASE_CHARGE_PER_DAY = 0.4603;
+
+        // Tier limits
+        const TIER1_LIM = 650;
+        const TIER2_LIM = 350;
+
+        // Seasonal Rates for Summer/Winter
+        const SUMMER_TIER1_RATE = 0.066678;
+        const SUMMER_TIER2_RATE = 0.110748;
+        const SUMMER_TIER3_RATE = 0.114625;
+        const WINTER_TIER1_RATE = 0.062404;
+        const WINTER_TIER2_RATE = 0.062404;
+        const WINTER_TIER3_RATE = 0.062404;
+
+        // Fuel riders
+        const DSM_P = 0.015989;
+        const NUCLEAR_P = 0.041562;
+        const ENV_P = 0.162813;
+
+        // Franchise fee (in or out of the city)
+        const IN_CITY = 0.030674;
+        const OUT_CITY = 0.011839;
+
+        // Fuel cost per kWh (depending on season)
+        const SUMMER_FUEL = 0.045876;
+        const WINTER_FUEL = 0.042859;
+
+        function calcBill() {
+            // Inputs with conversion
+            var usage = parseFloat(document.getElementById("usage").value);
+            var days = parseFloat(document.getElementById("days").value);
+            var insideCity = document.getElementById("insideCity").checked;
+            var isSummer = document.getElementById("isSummer").checked;
+            var taxRate = parseFloat(document.getElementById("tax").value);
+
+            // Make sure input is as intended
+            if (isNaN(usage)) usage = 0;
+            if (isNaN(days)) days = 0;
+            if (isNaN(taxRate)) taxRate = 0;
+
+            // Base charge
+            var baseCharge = BASE_CHARGE_PER_DAY * days;
+
+            // Rates depending on the given season 
+            var tier1Rate, tier2Rate, tier3Rate, fuelRate;
+            if (isSummer) {
+                tier1Rate = SUMMER_TIER1_RATE;
+                tier2Rate = SUMMER_TIER2_RATE;
+                tier3Rate = SUMMER_TIER3_RATE;
+                fuelRate = SUMMER_FUEL;
+            } else {
+                tier1Rate = WINTER_TIER1_RATE;
+                tier2Rate = WINTER_TIER2_RATE;
+                tier3Rate = WINTER_TIER3_RATE;
+                fuelRate = WINTER_FUEL;
+            }
+
+            // Tier usage
+            var tier1Usage = Math.min(usage, TIER1_LIM);
+            var remainingAfterTier1 = usage - tier1Usage;
+            var tier2Usage = Math.min(Math.max(remainingAfterTier1, 0), TIER2_LIM);
+            var tier3Usage = Math.max(usage - (TIER1_LIM + TIER2_LIM), 0);
+
+            // Tier charges
+            var tier1Charge = tier1Usage * tier1Rate;
+            var tier2Charge = tier2Usage * tier2Rate;
+            var tier3Charge = tier3Usage * tier3Rate;
+            var baseRevenue = baseCharge + tier1Charge + tier2Charge + tier3Charge;
+
+            // Fuel riders
+            var fuelCost = usage * fuelRate;
+            var dsmCharge = baseRevenue * DSM_P;
+            var nuclearCharge = baseRevenue * NUCLEAR_P;
+            var envCharge = baseRevenue * ENV_P;
+            var totalRevenue = baseRevenue + fuelCost + dsmCharge + nuclearCharge + envCharge;
+
+            // Franchise fee
+            var franchiseRate = insideCity ? IN_CITY : OUT_CITY;
+            var franchiseFee = totalRevenue * franchiseRate;
+
+            // Totals
+            var totalBeforeTax = totalRevenue + franchiseFee;
+            var totalAfterTax = totalBeforeTax * (1 + taxRate / 100);
+
+            // Rounding function
+            function roundit(n) {
+                return (Math.round(n * 100) / 100).toFixed(2);
+            }
+
+            document.getElementById("baseCharge").textContent = roundit(baseCharge);
+            document.getElementById("tier1").textContent = roundit(tier1Charge);
+            document.getElementById("tier2").textContent = roundit(tier2Charge);
+            document.getElementById("tier3").textContent = roundit(tier3Charge);
+            document.getElementById("baseRevenue").textContent = roundit(baseRevenue);
+            document.getElementById("fuelCost").textContent = roundit(fuelCost);
+            document.getElementById("dsm").textContent = roundit(dsmCharge);
+            document.getElementById("nuclear").textContent = roundit(nuclearCharge);
+            document.getElementById("env").textContent = roundit(envCharge);
+            document.getElementById("totalRevenue").textContent = roundit(totalRevenue);
+            document.getElementById("franchise").textContent = roundit(franchiseFee);
+            document.getElementById("totalExTax").textContent = roundit(totalBeforeTax);
+            document.getElementById("totalWithTax").textContent = roundit(totalAfterTax);
+
+            if (totalAfterTax > 500) {
+                window.open("https://www.georgiapower.com/residential/save-money-and-energy/products-programs.html");
+            }
+        }
+
+        // Run on submit clicked
+        document.getElementById("bill-form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            calcBill();
+        });
+
+    </script>
+
+</body>
+
+</html>
